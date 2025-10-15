@@ -762,228 +762,187 @@ export default function ClinicOnboardingMobile() {
                   ))}
                 </Box>
 
-                {/* Testimonios en Video - CORREGIDO SIN AUDIO DOBLE */}
+                {/* UN SOLO VIDEO DE TESTIMONIO - MISMA DINÁMICA QUE STEP 0 */}
                 <Typography variant="h6" fontWeight="700" sx={{ mt: 3 }}>
-                  Testimonios en Video
+                  Testimonio de Paciente
                 </Typography>
-                <Box sx={{ display: "grid", gap: 3 }}>
-                  {videoTestimonials.map((testimonial, index) => (
-                    <Paper
-                      key={index}
-                      elevation={4}
-                      sx={{
-                        borderRadius: 3,
-                        overflow: "hidden",
-                        boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                        background: "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
-                        border: "1px solid #e0e0e0",
-                        position: "relative",
-                      }}
-                    >
-                      {/* Video Player Local - VERSIÓN SIMPLIFICADA */}
+
+                {/* Video Player de Testimonio - MISMA ESTRUCTURA QUE STEP 0 */}
+                <Paper
+                  sx={{
+                    aspectRatio: "16/9",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    mb: 2,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                    position: "relative",
+                    cursor: !testimonialVideoEnded ? "pointer" : "default",
+                    minHeight: "160px",
+                    WebkitUserSelect: "none",
+                    WebkitTouchCallout: "none",
+                  }}
+                >
+                  {!testimonialVideoEnded ? (
+                    playingVideo === "testimonial" ? (
+                      <video
+                        controls
+                        autoPlay
+                        playsInline
+                        webkit-playsinline="true"
+                        disablePictureInPicture
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          userSelect: "none",
+                          WebkitUserSelect: "none",
+                        }}
+                        onContextMenu={preventDefault}
+                        onEnded={() => {
+                          setTestimonialVideoEnded(true);
+                          setPlayingVideo(null);
+                        }}
+                      >
+                        <source src={testimonioMariana} type="video/mp4" />
+                      </video>
+                    ) : (
                       <Box
                         sx={{
+                          width: "100%",
+                          height: "100%",
+                          bgcolor: "#E3F2FD",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
                           position: "relative",
-                          aspectRatio: "16/9",
-                          bgcolor: "#000",
-                          cursor: "pointer",
-                          overflow: "hidden",
                         }}
-                        onClick={() => handleTestimonialVideoPlay(index)}
+                        onClick={() => setPlayingVideo("testimonial")}
                       >
-                        {/* Video element - SIN AUTOPLAY */}
                         <video
-                          ref={el => {
-                            if (el) {
-                              videoRefs.current[`testimonial-${index}`] = el;
-                              // Configurar muted por defecto para evitar sorpresas
-                              el.muted = false;
-                            }
-                          }}
-                          playsInline // 🔥 CRUCIAL para iOS
-                          webkit-playsinline="true" // 🔥 CRUCIAL para Safari
-                          disablePictureInPicture
-                          preload="metadata"
                           style={{
                             width: "100%",
                             height: "100%",
                             objectFit: "cover",
-                            backgroundColor: "#000",
-                            display: playingVideo === index ? "block" : "none",
+                            opacity: 0.4,
+                            filter: "brightness(0.8)",
                           }}
-                          onContextMenu={preventDefault}
-                          onEnded={() => handleVideoEnd(index)}
+                          muted
+                          loop
+                          playsInline
+                          webkit-playsinline="true"
                         >
-                          <source src={testimonial.video} type="video/mp4" />
-                          Tu navegador no soporta el elemento de video.
+                          <source src={testimonioMariana} type="video/mp4" />
                         </video>
-
-                        {/* Thumbnail - solo se muestra cuando NO se está reproduciendo */}
-                        {playingVideo !== index && (
-                          <>
-                            <Box
-                              component="img"
-                              src={testimonial.thumbnail}
-                              sx={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                filter: "brightness(0.7)",
-                              }}
-                              alt={`Thumbnail de ${testimonial.name}`}
-                            />
-                            
-                            {/* Overlay con botón de play */}
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                background: "rgba(0,0,0,0.3)",
-                                transition: "all 0.3s ease",
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  width: 50,
-                                  height: 50,
-                                  borderRadius: "50%",
-                                  bgcolor: "rgba(255,255,255,0.9)",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-                                  transition: "all 0.3s ease",
-                                }}
-                              >
-                                <PlayArrow sx={{ color: "#1E88E5", fontSize: 25 }} />
-                              </Box>
-                            </Box>
-                          </>
-                        )}
-
-                        {/* Controles cuando el video está reproduciéndose */}
-                        {playingVideo === index && (
-                          <Box
-                            sx={{
-                              position: "absolute",
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
-                              p: 1,
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Button
-                              variant="contained"
-                              size="small"
-                              startIcon={<Pause />}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleTestimonialVideoPlay(index);
-                              }}
-                              sx={{
-                                bgcolor: "rgba(255,255,255,0.9)",
-                                color: "#1E88E5",
-                                minWidth: "auto",
-                                px: 1,
-                                "&:hover": {
-                                  bgcolor: "rgba(255,255,255,1)",
-                                },
-                              }}
-                            >
-                              Pausar
-                            </Button>
-
-                            {/* Botón de mute */}
-                            <IconButton
-                              size="small"
-                              onClick={(e) => toggleMute(index, e)}
-                              sx={{
-                                color: "white",
-                                bgcolor: "rgba(0,0,0,0.5)",
-                                "&:hover": {
-                                  bgcolor: "rgba(0,0,0,0.7)",
-                                },
-                              }}
-                            >
-                              {mutedVideos[`testimonial-${index}`] ? <VolumeOff /> : <VolumeUp />}
-                            </IconButton>
-                          </Box>
-                        )}
-
-                        {/* Badge de duración */}
-                        <Chip
-                          label={testimonial.duration}
-                          size="small"
+                        
+                        <PlayCircle sx={{ 
+                          position: "absolute", 
+                          color: "#1E88E5", 
+                          fontSize: isSmallMobile ? 40 : 45,
+                          bgcolor: "rgba(255,255,255,0.9)",
+                          borderRadius: "50%",
+                          p: 0.5,
+                          zIndex: 2
+                        }} />
+                        
+                        <Typography 
+                          sx={{ 
+                            position: "absolute", 
+                            bottom: 10, 
+                            left: 10, 
+                            color: "#1E88E5", 
+                            fontWeight: "600",
+                            fontSize: "0.75rem",
+                            zIndex: 2,
+                            background: "rgba(255,255,255,0.8)",
+                            padding: "3px 6px",
+                            borderRadius: 1,
+                          }}
+                        >
+                          Ver testimonio
+                        </Typography>
+                        
+                        <Box
                           sx={{
                             position: "absolute",
-                            bottom: 8,
-                            right: 8,
-                            bgcolor: "rgba(0,0,0,0.7)",
-                            color: "white",
-                            fontWeight: "600",
-                            fontSize: "0.7rem",
-                            height: "24px"
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            bgcolor: "rgba(227, 242, 253, 0.6)",
+                            zIndex: 1,
                           }}
                         />
                       </Box>
+                    )
+                  ) : (
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        bgcolor: "#E3F2FD",
+                        p: 2,
+                      }}
+                    >
+                      <CheckCircle sx={{ color: "#4CAF50", fontSize: 35, mb: 1 }} />
+                      <Typography 
+                        variant="h6" 
+                        fontWeight="700" 
+                        textAlign="center" 
+                        sx={{ color: "#1E88E5", mb: 0.5, fontSize: mobileSizes.titleFontSize }}
+                      >
+                        Testimonio visto
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        textAlign="center" 
+                        sx={{ color: "#666", fontSize: mobileSizes.bodyFontSize }}
+                      >
+                        Gracias por ver la experiencia de nuestro paciente
+                      </Typography>
+                    </Box>
+                  )}
+                </Paper>
 
-                      {/* Información del testimonio */}
-                      <Box sx={{ p: 2 }}>
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
-                          <Box sx={{ flex: 1 }}>
-                            <Typography variant="subtitle1" fontWeight="700" sx={{ mb: 0.5, fontSize: "0.9rem" }}>
-                              {testimonial.name}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.75rem" }}>
-                              {testimonial.role}
-                            </Typography>
-                          </Box>
-                          <Chip
-                            label="VIDEO"
-                            size="small"
-                            sx={{
-                              bgcolor: "#1E88E5",
-                              color: "white",
-                              fontWeight: "600",
-                              fontSize: "0.65rem",
-                              height: "22px"
-                            }}
-                          />
-                        </Box>
-                        
-                        {/* Rating */}
-                        <Box sx={{ display: "flex", alignItems: "center", mt: 1.5 }}>
-                          <Box sx={{ display: "flex", gap: 0.3 }}>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Box
-                                key={star}
-                                sx={{
-                                  width: 12,
-                                  height: 12,
-                                  borderRadius: "50%",
-                                  bgcolor: "#FFD700",
-                                }}
-                              />
-                            ))}
-                          </Box>
-                          <Typography variant="body2" color="text.secondary" sx={{ ml: 1, fontSize: "0.7rem" }}>
-                            5.0 • Experiencia verificada
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Paper>
-                  ))}
-                </Box>
+                {/* Información del testimonio */}
+                <Paper
+                  elevation={2}
+                  sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: "white",
+                  }}
+                >
+                  <Typography variant="subtitle1" fontWeight="700" sx={{ mb: 1, fontSize: "0.9rem" }}>
+                    Mariana López
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, fontSize: "0.75rem" }}>
+                    Paciente de Ortodoncia - Tratamiento completado
+                  </Typography>
+                  
+                  {/* Rating */}
+                  <Box sx={{ display: "flex", alignItems: "center", mt: 1.5 }}>
+                    <Box sx={{ display: "flex", gap: 0.3 }}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Box
+                          key={star}
+                          sx={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: "50%",
+                            bgcolor: "#FFD700",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: 1, fontSize: "0.7rem" }}>
+                      5.0 • Experiencia verificada
+                    </Typography>
+                  </Box>
+                </Paper>
               </Box>
 
               {/* Botones ajustados al mismo tamaño */}
