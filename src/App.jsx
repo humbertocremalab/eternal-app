@@ -710,7 +710,7 @@ const scrollToSlide = (slideIndex) => {
               justifyContent: "center"
             }}
           >
-            {/* Mapa INTERACTIVO pero no clickeable */}
+            {/* Mapa INTERACTIVO - SOLUCIÓN CORREGIDA */}
             <Paper
               sx={{
                 height: "200px",
@@ -720,36 +720,38 @@ const scrollToSlide = (slideIndex) => {
                 border: "2px solid #e0e0e0",
                 flexShrink: 0,
                 position: "relative",
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 1,
-                  pointerEvents: "none",
-                  background: "transparent"
-                }
               }}
             >
               <iframe
                 title={`Mapa de ${selectedBranch}`}
-                src={branches.find((b) => b.name === selectedBranch)?.map}
+                src={`${branches.find((b) => b.name === selectedBranch)?.map}&navigate=false`}
                 width="100%"
                 height="100%"
                 style={{ 
                   border: "none",
-                  pointerEvents: "auto" // Permite interacción con el mapa
+                  pointerEvents: "auto"
                 }}
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                // Atributos para prevenir comportamientos no deseados
-                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                // Permite interacciones pero limita navegación
+                sandbox="allow-scripts allow-same-origin"
+                // Atributo para prevenir navegación
+                onLoad={(e) => {
+                  // Script para deshabilitar clics en enlaces dentro del iframe
+                  const iframe = e.target;
+                  try {
+                    iframe.contentWindow.document.addEventListener('click', (event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }, true);
+                  } catch (error) {
+                    console.log('No se puede acceder al contenido del iframe por políticas de seguridad');
+                  }
+                }}
               />
               
-              {/* Overlay transparente que bloquea clics pero permite scroll */}
+              {/* Overlay INVISIBLE que solo bloquea clics específicos */}
               <Box
                 sx={{
                   position: "absolute",
@@ -758,20 +760,23 @@ const scrollToSlide = (slideIndex) => {
                   right: 0,
                   bottom: 0,
                   zIndex: 2,
-                  cursor: "grab",
-                  "&:active": {
-                    cursor: "grabbing"
+                  pointerEvents: "none", // IMPORTANTE: No bloquea eventos del mouse
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    pointerEvents: "auto",
+                    cursor: "grab",
+                    "&:active": {
+                      cursor: "grabbing"
+                    }
                   }
                 }}
+                // Solo previene el menú contextual
                 onContextMenu={(e) => e.preventDefault()}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-                onDoubleClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
               />
             </Paper>
 
