@@ -669,7 +669,7 @@ const scrollToSlide = (slideIndex) => {
       p: mobileSizes.padding, 
       display: "flex", 
       flexDirection: "column",
-      minHeight: "740px" // Restauro la altura mínima correcta
+      minHeight: "740px"
     }}>
       <Typography variant="h5" fontWeight="700" sx={{ mb: 2, fontSize: mobileSizes.titleFontSize, textAlign: "center" }}>
         {selectedBranch}
@@ -710,7 +710,7 @@ const scrollToSlide = (slideIndex) => {
               justifyContent: "center"
             }}
           >
-            {/* Mapa - Reducido para dar espacio */}
+            {/* Mapa INTERACTIVO pero no clickeable */}
             <Paper
               sx={{
                 height: "200px",
@@ -719,6 +719,18 @@ const scrollToSlide = (slideIndex) => {
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 border: "2px solid #e0e0e0",
                 flexShrink: 0,
+                position: "relative",
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 1,
+                  pointerEvents: "none",
+                  background: "transparent"
+                }
               }}
             >
               <iframe
@@ -726,14 +738,44 @@ const scrollToSlide = (slideIndex) => {
                 src={branches.find((b) => b.name === selectedBranch)?.map}
                 width="100%"
                 height="100%"
-                style={{ border: "none" }}
+                style={{ 
+                  border: "none",
+                  pointerEvents: "auto" // Permite interacción con el mapa
+                }}
                 allowFullScreen={false}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
+                // Atributos para prevenir comportamientos no deseados
+                sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+              />
+              
+              {/* Overlay transparente que bloquea clics pero permite scroll */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  zIndex: 2,
+                  cursor: "grab",
+                  "&:active": {
+                    cursor: "grabbing"
+                  }
+                }}
+                onContextMenu={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDoubleClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
               />
             </Paper>
 
-            {/* Fotografía - Reducido para dar espacio */}
+            {/* Fotografía */}
             <Paper
               sx={{
                 height: "180px",
@@ -756,7 +798,7 @@ const scrollToSlide = (slideIndex) => {
             </Paper>
           </Box>
 
-          {/* Slide 2: Video - ALTURA AJUSTADA */}
+          {/* Slide 2: Video */}
           <Box
             sx={{
               minWidth: "100%",
@@ -772,8 +814,8 @@ const scrollToSlide = (slideIndex) => {
                 key={index}
                 sx={{
                   width: "100%",
-                  maxWidth: "280px", // Limitar ancho máximo para video vertical
-                  height: "420px", // Altura reducida para que quepa
+                  maxWidth: "280px",
+                  height: "420px",
                   borderRadius: 2,
                   overflow: "hidden",
                   position: "relative",
@@ -784,7 +826,7 @@ const scrollToSlide = (slideIndex) => {
                   justifyContent: "center",
                   boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                   flexShrink: 0,
-                  margin: "0 auto" // Centrar el video
+                  margin: "0 auto"
                 }}
                 onClick={() => handleBranchVideoPlay(selectedBranch, index)}
               >
@@ -798,7 +840,7 @@ const scrollToSlide = (slideIndex) => {
                     style={{
                       width: "100%",
                       height: "100%",
-                      objectFit: "cover", // Cambiado a cover para llenar el contenedor
+                      objectFit: "cover",
                       backgroundColor: "#000",
                     }}
                     onContextMenu={preventDefault}
@@ -1008,7 +1050,7 @@ const scrollToSlide = (slideIndex) => {
                   >
                     <Chat sx={{ fontSize: 40, mb: 2 }} />
                     <Typography variant="h6" fontWeight="700" sx={{ mb: 1, fontSize: "1.1rem" }}>
-                      WhatsApp Inmediato
+                      Contacto Inmediato
                     </Typography>
                     <Typography variant="body1" sx={{ opacity: 0.9, fontSize: "0.9rem" }}>
                       Resuelve dudas y confirma horarios
@@ -1032,9 +1074,9 @@ const scrollToSlide = (slideIndex) => {
                         </Typography>
                         <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6, fontSize: "0.9rem", mt: 1 }}>
                           <Box component="span" fontWeight="600" color="#1a1a1a">
-                            Si ya dejaste tus datos, espera nuestra llamada
+                            Si ya dejaste tus datos, resiviras nuestra llamada
                           </Box>{" "}
-                          en las próximas horas hábiles.
+                          en las próximas horas o puedes hablar con una de nuestras asesoras.
                         </Typography>
                       </Box>
                     </Box>
