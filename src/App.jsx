@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Box,
@@ -25,6 +25,8 @@ import {
   LocalActivity,
   ConfirmationNumber,
   Pause,
+  VolumeOff,
+  VolumeUp,
 } from "@mui/icons-material";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/700.css";
@@ -42,6 +44,7 @@ export default function ClinicOnboardingMobile() {
   const [videoEnded, setVideoEnded] = useState(false);
   const videoRefs = useRef({});
   const [playingBranchVideo, setPlayingBranchVideo] = useState(null);
+  const [mutedVideos, setMutedVideos] = useState({});
 
   const theme = useTheme();
   const isSmallMobile = useMediaQuery('(max-width: 360px)');
@@ -115,32 +118,40 @@ export default function ClinicOnboardingMobile() {
     setStep((s) => Math.max(s - 1, 0));
   }
 
-  // Función mejorada para manejar videos de testimonios
-  const handleTestimonialVideoPlay = (index) => {
+  // Función mejorada para manejar videos de testimonios - SIN AUDIO DOBLE
+  const handleTestimonialVideoPlay = async (index) => {
+    const videoKey = `testimonial-${index}`;
+    const videoElement = videoRefs.current[videoKey];
+
+    if (!videoElement) return;
+
+    // Si el video ya se está reproduciendo, pausarlo
+    if (playingVideo === index) {
+      videoElement.pause();
+      setPlayingVideo(null);
+      return;
+    }
+
     // Pausar todos los otros videos primero
     Object.keys(videoRefs.current).forEach(key => {
-      if (key !== `testimonial-${index}` && videoRefs.current[key]) {
-        videoRefs.current[key].pause();
-        videoRefs.current[key].currentTime = 0;
+      if (key !== videoKey && videoRefs.current[key]) {
+        const otherVideo = videoRefs.current[key];
+        otherVideo.pause();
+        otherVideo.currentTime = 0;
       }
     });
 
-    if (playingVideo === index) {
-      // Si ya está reproduciéndose, pausarlo
-      if (videoRefs.current[`testimonial-${index}`]) {
-        videoRefs.current[`testimonial-${index}`].pause();
-      }
-      setPlayingVideo(null);
-    } else {
-      // Reproducir nuevo video
+    // Configurar el video antes de reproducir
+    videoElement.currentTime = 0;
+    videoElement.muted = false; // Asegurar que no esté muteado
+
+    try {
+      // Reproducir el video
+      await videoElement.play();
       setPlayingVideo(index);
-      setTimeout(() => {
-        if (videoRefs.current[`testimonial-${index}`]) {
-          videoRefs.current[`testimonial-${index}`].play().catch(error => {
-            console.log("Error al reproducir video:", error);
-          });
-        }
-      }, 100);
+    } catch (error) {
+      console.log("Error al reproducir video:", error);
+      setPlayingVideo(null);
     }
   };
 
@@ -161,8 +172,37 @@ export default function ClinicOnboardingMobile() {
     }
   };
 
+  // Efecto para pausar videos cuando cambia el step
+  useEffect(() => {
+    if (step !== 3) {
+      // Pausar todos los videos cuando no estamos en el step de testimonios
+      Object.keys(videoRefs.current).forEach(key => {
+        if (videoRefs.current[key]) {
+          videoRefs.current[key].pause();
+          videoRefs.current[key].currentTime = 0;
+        }
+      });
+      setPlayingVideo(null);
+    }
+  }, [step]);
+
+  // Función para toggle mute
+  const toggleMute = (index, e) => {
+    e.stopPropagation(); // Prevenir que active el play/pause
+    const videoKey = `testimonial-${index}`;
+    const videoElement = videoRefs.current[videoKey];
+    
+    if (videoElement) {
+      videoElement.muted = !videoElement.muted;
+      setMutedVideos(prev => ({
+        ...prev,
+        [videoKey]: videoElement.muted
+      }));
+    }
+  };
+
   return (
-    <Box
+      <Box
       sx={{
         width: "100%",
         minWidth: "360px",
@@ -722,7 +762,7 @@ export default function ClinicOnboardingMobile() {
                   ))}
                 </Box>
 
-                {/* Testimonios en Video - CORREGIDO */}
+                {/* Testimonios en Video - CORREGIDO SIN AUDIO DOBLE */}
                 <Typography variant="h6" fontWeight="700" sx={{ mt: 3 }}>
                   Testimonios en Video
                 </Typography>
@@ -740,7 +780,7 @@ export default function ClinicOnboardingMobile() {
                         position: "relative",
                       }}
                     >
-                      {/* Video Player Local MEJORADO */}
+                      {/* Video Player Local - VERSIÓN SIMPLIFICADA */}
                       <Box
                         sx={{
                           position: "relative",
@@ -749,62 +789,37 @@ export default function ClinicOnboardingMobile() {
                           cursor: "pointer",
                           overflow: "hidden",
                         }}
+                        onClick={() => handleTestimonialVideoPlay(index)}
                       >
-                        {playingVideo === index ? (
-                          // Video reproduciéndose EN LÍNEA
-                          <Box sx={{ position: "relative", width: "100%", height: "100%" }}>
-                            <video
-                              ref={el => videoRefs.current[`testimonial-${index}`] = el}
-                              controls
-                              playsInline // 🔥 CRUCIAL para iOS
-                              webkit-playsinline="true" // 🔥 CRUCIAL para Safari
-                              disablePictureInPicture
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                                backgroundColor: "#000",
-                              }}
-                              onContextMenu={preventDefault}
-                              onEnded={() => handleVideoEnd(index)}
-                              onPause={() => setPlayingVideo(null)}
-                            >
-                              <source src={testimonial.video} type="video/mp4" />
-                              Tu navegador no soporta el elemento de video.
-                            </video>
-                            
-                            {/* Overlay de controles personalizado */}
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
-                                p: 1,
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Button
-                                variant="contained"
-                                size="small"
-                                startIcon={<Pause />}
-                                onClick={() => handleTestimonialVideoPlay(index)}
-                                sx={{
-                                  bgcolor: "rgba(255,255,255,0.9)",
-                                  color: "#1E88E5",
-                                  "&:hover": {
-                                    bgcolor: "rgba(255,255,255,1)",
-                                  },
-                                }}
-                              >
-                                Pausar
-                              </Button>
-                            </Box>
-                          </Box>
-                        ) : (
-                          // Thumbnail con botón de play - MEJORADO
+                        {/* Video element - SIN AUTOPLAY */}
+                        <video
+                          ref={el => {
+                            if (el) {
+                              videoRefs.current[`testimonial-${index}`] = el;
+                              // Configurar muted por defecto para evitar sorpresas
+                              el.muted = false;
+                            }
+                          }}
+                          playsInline // 🔥 CRUCIAL para iOS
+                          webkit-playsinline="true" // 🔥 CRUCIAL para Safari
+                          disablePictureInPicture
+                          preload="metadata"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            backgroundColor: "#000",
+                            display: playingVideo === index ? "block" : "none",
+                          }}
+                          onContextMenu={preventDefault}
+                          onEnded={() => handleVideoEnd(index)}
+                        >
+                          <source src={testimonial.video} type="video/mp4" />
+                          Tu navegador no soporta el elemento de video.
+                        </video>
+
+                        {/* Thumbnail - solo se muestra cuando NO se está reproduciendo */}
+                        {playingVideo !== index && (
                           <>
                             <Box
                               component="img"
@@ -818,7 +833,7 @@ export default function ClinicOnboardingMobile() {
                               alt={`Thumbnail de ${testimonial.name}`}
                             />
                             
-                            {/* Overlay con botón de play MEJORADO */}
+                            {/* Overlay con botón de play */}
                             <Box
                               sx={{
                                 position: "absolute",
@@ -831,11 +846,7 @@ export default function ClinicOnboardingMobile() {
                                 justifyContent: "center",
                                 background: "rgba(0,0,0,0.3)",
                                 transition: "all 0.3s ease",
-                                "&:hover": {
-                                  background: "rgba(0,0,0,0.2)",
-                                },
                               }}
-                              onClick={() => handleTestimonialVideoPlay(index)}
                             >
                               <Box
                                 sx={{
@@ -848,33 +859,82 @@ export default function ClinicOnboardingMobile() {
                                   justifyContent: "center",
                                   boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
                                   transition: "all 0.3s ease",
-                                  "&:hover": {
-                                    transform: "scale(1.1)",
-                                    bgcolor: "rgba(255,255,255,1)",
-                                  },
                                 }}
                               >
                                 <PlayArrow sx={{ color: "#1E88E5", fontSize: 25 }} />
                               </Box>
                             </Box>
-                            
-                            {/* Badge de duración */}
-                            <Chip
-                              label={testimonial.duration}
-                              size="small"
-                              sx={{
-                                position: "absolute",
-                                bottom: 8,
-                                right: 8,
-                                bgcolor: "rgba(0,0,0,0.7)",
-                                color: "white",
-                                fontWeight: "600",
-                                fontSize: "0.7rem",
-                                height: "24px"
-                              }}
-                            />
                           </>
                         )}
+
+                        {/* Controles cuando el video está reproduciéndose */}
+                        {playingVideo === index && (
+                          <Box
+                            sx={{
+                              position: "absolute",
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+                              p: 1,
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Button
+                              variant="contained"
+                              size="small"
+                              startIcon={<Pause />}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleTestimonialVideoPlay(index);
+                              }}
+                              sx={{
+                                bgcolor: "rgba(255,255,255,0.9)",
+                                color: "#1E88E5",
+                                minWidth: "auto",
+                                px: 1,
+                                "&:hover": {
+                                  bgcolor: "rgba(255,255,255,1)",
+                                },
+                              }}
+                            >
+                              Pausar
+                            </Button>
+
+                            {/* Botón de mute */}
+                            <IconButton
+                              size="small"
+                              onClick={(e) => toggleMute(index, e)}
+                              sx={{
+                                color: "white",
+                                bgcolor: "rgba(0,0,0,0.5)",
+                                "&:hover": {
+                                  bgcolor: "rgba(0,0,0,0.7)",
+                                },
+                              }}
+                            >
+                              {mutedVideos[`testimonial-${index}`] ? <VolumeOff /> : <VolumeUp />}
+                            </IconButton>
+                          </Box>
+                        )}
+
+                        {/* Badge de duración */}
+                        <Chip
+                          label={testimonial.duration}
+                          size="small"
+                          sx={{
+                            position: "absolute",
+                            bottom: 8,
+                            right: 8,
+                            bgcolor: "rgba(0,0,0,0.7)",
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: "0.7rem",
+                            height: "24px"
+                          }}
+                        />
                       </Box>
 
                       {/* Información del testimonio */}
