@@ -712,73 +712,62 @@ const scrollToSlide = (slideIndex) => {
           >
             {/* Mapa INTERACTIVO - SOLUCIÓN CORREGIDA */}
             <Paper
-              sx={{
-                height: "200px",
-                borderRadius: 2,
-                overflow: "hidden",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                border: "2px solid #e0e0e0",
-                flexShrink: 0,
-                position: "relative",
-              }}
-            >
-              <iframe
-                title={`Mapa de ${selectedBranch}`}
-                src={`${branches.find((b) => b.name === selectedBranch)?.map}&navigate=false`}
-                width="100%"
-                height="100%"
-                style={{ 
-                  border: "none",
-                  pointerEvents: "auto"
-                }}
-                allowFullScreen={false}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                // Permite interacciones pero limita navegación
-                sandbox="allow-scripts allow-same-origin"
-                // Atributo para prevenir navegación
-                onLoad={(e) => {
-                  // Script para deshabilitar clics en enlaces dentro del iframe
-                  const iframe = e.target;
-                  try {
-                    iframe.contentWindow.document.addEventListener('click', (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }, true);
-                  } catch (error) {
-                    console.log('No se puede acceder al contenido del iframe por políticas de seguridad');
-                  }
-                }}
-              />
-              
-              {/* Overlay INVISIBLE que solo bloquea clics específicos */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  zIndex: 2,
-                  pointerEvents: "none", // IMPORTANTE: No bloquea eventos del mouse
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    pointerEvents: "auto",
-                    cursor: "grab",
-                    "&:active": {
-                      cursor: "grabbing"
-                    }
-                  }
-                }}
-                // Solo previene el menú contextual
-                onContextMenu={(e) => e.preventDefault()}
-              />
-            </Paper>
+  sx={{
+    height: "200px",
+    borderRadius: 2,
+    overflow: "hidden",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    border: "2px solid #e0e0e0",
+    flexShrink: 0,
+    position: "relative",
+  }}
+>
+  <iframe
+    title={`Mapa de ${selectedBranch}`}
+    src={branches.find((b) => b.name === selectedBranch)?.map}
+    width="100%"
+    height="100%"
+    style={{ 
+      border: "none",
+      pointerEvents: "auto"
+    }}
+    allowFullScreen={false}
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+  />
+  
+  {/* Overlay que intercepta solo los clics de enlaces */}
+  <Box
+    sx={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 2,
+      pointerEvents: "none",
+    }}
+    onClick={(e) => {
+      // Si el clic fue en un área que probablemente sea un enlace, lo prevenimos
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickY = e.clientY - rect.top;
+      const clickX = e.clientX - rect.left;
+      
+      // Las áreas de controles del mapa suelen estar en los bordes
+      const isControlArea = 
+        clickY < 50 || // Parte superior (controles de zoom)
+        clickY > rect.height - 50 || // Parte inferior
+        clickX < 50 || // Lado izquierdo
+        clickX > rect.width - 50; // Lado derecho
+        
+      if (!isControlArea) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }}
+    onContextMenu={(e) => e.preventDefault()}
+  />
+</Paper>
 
             {/* Fotografía */}
             <Paper
