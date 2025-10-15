@@ -473,8 +473,185 @@ export default function ClinicOnboardingMobile() {
           </motion.div>
         )}
 
-        {/* STEP 3 - FAQ + Testimonios en Video CORREGIDO */}
-        {step === 3 && (
+        {/* STEP 1 - Info de sucursal - OPTIMIZADO */}
+        {step === 1 && (
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Box sx={{ 
+              height: "100dvh", 
+              p: mobileSizes.padding, 
+              display: "flex", 
+              flexDirection: "column",
+              minHeight: "740px"
+            }}>
+              <Typography variant="h6" fontWeight="700" sx={{ mb: 1, fontSize: mobileSizes.titleFontSize }}>
+                {selectedBranch}
+              </Typography>
+
+              {/* Mapa COMPACTO */}
+              <Paper
+                sx={{
+                  height: "150px",
+                  borderRadius: 2,
+                  overflow: "hidden",
+                  mb: 2,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                }}
+              >
+                <iframe
+                  title={selectedBranch}
+                  src={branches.find((b) => b.name === selectedBranch)?.map}
+                  width="100%"
+                  height="100%"
+                  style={{ border: "none" }}
+                />
+              </Paper>
+
+              {/* Videos MÁS PEQUEÑOS para 360px */}
+              {branchVideos[selectedBranch]?.map((video, index) => (
+                <Paper
+                  key={index}
+                  sx={{
+                    width: "100%",
+                    maxWidth: "220px",
+                    height: "390px",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    mb: 2,
+                    position: "relative",
+                    cursor: "pointer",
+                    bgcolor: "#000",
+                    margin: "0 auto",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onClick={() => handleBranchVideoPlay(selectedBranch, index)}
+                >
+                  {playingBranchVideo === `${selectedBranch}-${index}` ? (
+                    <video
+                      controls
+                      autoPlay
+                      playsInline // 🔥 IMPORTANTE: Para iOS
+                      webkit-playsinline="true" // 🔥 IMPORTANTE: Para Safari iOS
+                      disablePictureInPicture
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        backgroundColor: "#000",
+                      }}
+                      onContextMenu={preventDefault}
+                      onEnded={() => setPlayingBranchVideo(null)}
+                    >
+                      <source src={video} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <>
+                      <video
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          opacity: 0.7,
+                          filter: "brightness(0.6)",
+                        }}
+                        muted
+                        playsInline
+                        webkit-playsinline="true"
+                      >
+                        <source src={video} type="video/mp4" />
+                      </video>
+                      
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "rgba(0,0,0,0.3)",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 45,
+                            height: 45,
+                            borderRadius: "50%",
+                            bgcolor: "rgba(255,255,255,0.9)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            boxShadow: "0 2px 12px rgba(0,0,0,0.3)",
+                          }}
+                        >
+                          <PlayArrow sx={{ color: "#346bf1", fontSize: 22 }} />
+                        </Box>
+                      </Box>
+                      
+                      <Typography sx={{ 
+                        position: "absolute", 
+                        bottom: 8, 
+                        left: 8, 
+                        color: "white", 
+                        fontWeight: "600",
+                        background: "rgba(0,0,0,0.6)",
+                        padding: "2px 6px",
+                        borderRadius: 1,
+                        fontSize: "0.7rem"
+                      }}>
+                        Video {index + 1}
+                      </Typography>
+                    </>
+                  )}
+                </Paper>
+              ))}
+
+              {/* Botones COMPACTOS */}
+              <Box sx={{ display: "flex", gap: 1, mt: "auto" }}>
+                <Button
+                  startIcon={<ArrowBack sx={{ fontSize: "18px" }} />}
+                  variant="outlined"
+                  fullWidth
+                  sx={{ 
+                    borderRadius: 2, 
+                    py: 1,
+                    fontSize: mobileSizes.buttonFontSize,
+                    minHeight: mobileSizes.buttonHeight
+                  }}
+                  onClick={prev}
+                >
+                  Atrás
+                </Button>
+                <Button
+                  endIcon={<ArrowForward sx={{ fontSize: "18px" }} />}
+                  variant="contained"
+                  fullWidth
+                  sx={{ 
+                    borderRadius: 2, 
+                    py: 1,
+                    fontSize: mobileSizes.buttonFontSize,
+                    minHeight: mobileSizes.buttonHeight
+                  }}
+                  onClick={next}
+                >
+                  Siguiente
+                </Button>
+              </Box>
+            </Box>
+          </motion.div>
+        )}
+
+        {/* STEP 3 - FAQ + Testimonios en Video con videos locales */}
+         {step === 3 && (
           <motion.div
             key={step}
             initial={{ opacity: 0, y: 50 }}
@@ -782,19 +959,6 @@ export default function ClinicOnboardingMobile() {
           </motion.div>
         )}
 
-        {/* Los otros steps (1, 2 y 4) permanecen igual */}
-        {/* STEP 1 - Info de sucursal - OPTIMIZADO */}
-        {step === 1 && (
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* ... (código del step 1 sin cambios) ... */}
-          </motion.div>
-        )}
 
         {/* STEP 2 - WhatsApp - OPTIMIZADO */}
         {step === 2 && (
@@ -806,6 +970,449 @@ export default function ClinicOnboardingMobile() {
             transition={{ duration: 0.5 }}
           >
             {/* ... (código del step 2 sin cambios) ... */}
+          </motion.div>
+        )}
+
+
+        {/* STEP 2 - WhatsApp - OPTIMIZADO */}
+        {step === 2 && (
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Box
+              sx={{
+                minHeight: "100dvh",
+                display: "flex",
+                flexDirection: "column",
+                p: mobileSizes.padding,
+                bgcolor: "#f8f9fa",
+                overflow: "hidden",
+              }}
+            >
+              <Box sx={{ 
+                flex: 1, 
+                display: "flex", 
+                flexDirection: "column",
+                overflowY: "auto",
+                pb: 2 
+              }}>
+                <Box sx={{ textAlign: "center", mb: 3, px: 1 }}>
+                  <CheckCircle 
+                    sx={{ 
+                      color: "#346bf1", 
+                      fontSize: 45, 
+                      mb: 2,
+                    }} 
+                  />
+                  <Typography variant="h6" fontWeight="700" sx={{ mb: 1, color: "#1a1a1a", fontSize: mobileSizes.titleFontSize }}>
+                    ¡Completa tu proceso!
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "#666", lineHeight: 1.5, fontSize: mobileSizes.bodyFontSize }}>
+                    Conecta con nuestra asesora especializada.
+                  </Typography>
+                </Box>
+
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3, px: 1 }}>
+                  <Paper
+                    elevation={2}
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      background: "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+                      color: "white",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Chat sx={{ fontSize: 30, mb: 1 }} />
+                    <Typography variant="subtitle1" fontWeight="700" sx={{ mb: 1, fontSize: "0.9rem" }}>
+                      WhatsApp Inmediato
+                    </Typography>
+                    <Typography variant="body2" sx={{ opacity: 0.9, fontSize: "0.75rem" }}>
+                      Resuelve dudas y confirma horarios
+                    </Typography>
+                  </Paper>
+
+                  <Paper
+                    elevation={1}
+                    sx={{
+                      p: 1.5,
+                      borderRadius: 2,
+                      bgcolor: "white",
+                      border: "2px solid #e3f2fd",
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "flex-start", mb: 1 }}>
+                      <Schedule sx={{ color: "#346bf1", mr: 1.5, mt: 0.2, fontSize: 18 }} />
+                      <Box>
+                        <Typography variant="subtitle2" fontWeight="600" sx={{ fontSize: "0.8rem" }}>
+                          Información importante
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.5, fontSize: "0.75rem", mt: 0.5 }}>
+                          <Box component="span" fontWeight="600" color="#1a1a1a">
+                            Si ya dejaste tus datos, espera nuestra llamada
+                          </Box>{" "}
+                          en las próximas horas hábiles.
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Paper>
+                </Box>
+
+                <Box sx={{ mb: 3, px: 1 }}>
+                  <Typography variant="subtitle2" fontWeight="600" sx={{ mb: 2, color: "#1a1a1a", fontSize: "0.85rem" }}>
+                    ¿Por qué hablar con nuestra asesora?
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                    {[
+                      "Confirmación inmediata de tu cita",
+                      "Resolución de dudas sobre tratamiento",
+                      "Información sobre preparación",
+                      "Detalles de costos y pagos",
+                      "Guía personalizada"
+                    ].map((benefit, index) => (
+                      <Box key={index} sx={{ display: "flex", alignItems: "flex-start" }}>
+                        <CheckCircle sx={{ color: "#346bf1", fontSize: 16, mr: 1.5, mt: 0.1 }} />
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.75rem", lineHeight: 1.4 }}>
+                          {benefit}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+
+              <Box sx={{ 
+                display: "flex", 
+                flexDirection: "column", 
+                gap: 2, 
+                pt: 2,
+                borderTop: "1px solid #e0e0e0",
+                bgcolor: "#f8f9fa"
+              }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  fullWidth
+                  startIcon={<Chat />}
+                  sx={{
+                    borderRadius: 2,
+                    py: 1,
+                    fontWeight: "700",
+                    fontSize: mobileSizes.buttonFontSize,
+                    background: "linear-gradient(135deg, #346bf1 0%, #125f8cff 100%)",
+                    boxShadow: "0 4px 12px rgba(37, 211, 102, 0.4)",
+                    minHeight: mobileSizes.buttonHeight
+                  }}
+                  onClick={() => window.open("https://wa.me/521XXXXXXXXXX", "_blank")}
+                >
+                  Hablar con asesora
+                </Button>
+
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <Button
+                    startIcon={<ArrowBack sx={{ fontSize: "18px" }} />}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ 
+                      borderRadius: 2, 
+                      py: 1,
+                      fontSize: mobileSizes.buttonFontSize,
+                      minHeight: mobileSizes.buttonHeight
+                    }}
+                    onClick={prev}
+                  >
+                    Atrás
+                  </Button>
+                  <Button
+                    endIcon={<ArrowForward sx={{ fontSize: "18px" }} />}
+                    variant="contained"
+                    fullWidth
+                    sx={{ 
+                      borderRadius: 2, 
+                      py: 1,
+                      fontSize: mobileSizes.buttonFontSize,
+                      minHeight: mobileSizes.buttonHeight
+                    }}
+                    onClick={next}
+                  >
+                    Siguiente
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          </motion.div>
+        )}
+
+        {/* STEP 3 - FAQ + Testimonios en Video con videos locales */}
+        {step === 3 && (
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.4 }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100dvh",
+                display: "flex",
+                flexDirection: "column",
+                p: 2,
+              }}
+            >
+              <Box sx={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 3 }}>
+                {/* Preguntas frecuentes */}
+                <Typography variant="h6" fontWeight="700">
+                  Preguntas frecuentes
+                </Typography>
+
+                <Box sx={{ display: "grid", gap: 2 }}>
+                  {faqs.map((f, i) => (
+                    <Paper
+                      key={i}
+                      elevation={3}
+                      sx={{
+                        borderRadius: 3,
+                        p: 2,
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        "&:hover": { transform: "translateY(-2px)", boxShadow: "0 10px 20px rgba(0,0,0,0.15)" },
+                      }}
+                      onClick={() => setFaqOpen(faqOpen === i ? null : i)}
+                    >
+                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography fontWeight="600" sx={{ fontSize: "0.9rem" }}>{f.q}</Typography>
+                        <Box
+                          sx={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: "50%",
+                            bgcolor: faqOpen === i ? "#346bf1" : "#f0f4f8",
+                            color: faqOpen === i ? "#fff" : "#346bf1",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontWeight: 700,
+                            fontSize: "0.8rem"
+                          }}
+                        >
+                          {faqOpen === i ? "−" : "+"}
+                        </Box>
+                      </Box>
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={faqOpen === i ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        {faqOpen === i && (
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontSize: "0.8rem" }}>
+                            {f.a}
+                          </Typography>
+                        )}
+                      </motion.div>
+                    </Paper>
+                  ))}
+                </Box>
+
+                {/* Testimonios en Video */}
+                <Typography variant="h6" fontWeight="700" sx={{ mt: 3 }}>
+                  Testimonios en Video
+                </Typography>
+                <Box sx={{ display: "grid", gap: 3 }}>
+                  {videoTestimonials.map((testimonial, index) => (
+                    <Paper
+                      key={index}
+                      elevation={4}
+                      sx={{
+                        borderRadius: 3,
+                        overflow: "hidden",
+                        boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                        background: "linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%)",
+                        border: "1px solid #e0e0e0",
+                        position: "relative",
+                      }}
+                    >
+                      {/* Video Player Local */}
+                      <Box
+                        sx={{
+                          position: "relative",
+                          aspectRatio: "16/9",
+                          bgcolor: "#000",
+                          cursor: "pointer",
+                          overflow: "hidden",
+                        }}
+                        onClick={() => handleVideoPlay(index)}
+                      >
+                        {playingVideo === index ? (
+                          // Video reproduciéndose
+                          <video
+                            controls
+                            autoPlay
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                            onEnded={() => setPlayingVideo(null)}
+                          >
+                            <source src={testimonial.video} type="video/mp4" />
+                            Tu navegador no soporta el elemento de video.
+                          </video>
+                        ) : (
+                          // Thumbnail con botón de play
+                          <>
+                            <Box
+                              component="img"
+                              src={testimonial.thumbnail}
+                              sx={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                filter: "brightness(0.7)",
+                              }}
+                              alt={`Thumbnail de ${testimonial.name}`}
+                            />
+                            {/* Overlay con botón de play */}
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "rgba(0,0,0,0.3)",
+                                transition: "all 0.3s ease",
+                                "&:hover": {
+                                  background: "rgba(0,0,0,0.2)",
+                                },
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: 50,
+                                  height: 50,
+                                  borderRadius: "50%",
+                                  bgcolor: "rgba(255,255,255,0.9)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                                  transition: "all 0.3s ease",
+                                  "&:hover": {
+                                    transform: "scale(1.1)",
+                                    bgcolor: "rgba(255,255,255,1)",
+                                  },
+                                }}
+                              >
+                                <PlayArrow sx={{ color: "#346bf1", fontSize: 25 }} />
+                              </Box>
+                            </Box>
+                            {/* Badge de duración */}
+                            <Chip
+                              label={testimonial.duration}
+                              size="small"
+                              sx={{
+                                position: "absolute",
+                                bottom: 8,
+                                right: 8,
+                                bgcolor: "rgba(0,0,0,0.7)",
+                                color: "white",
+                                fontWeight: "600",
+                                fontSize: "0.7rem",
+                                height: "24px"
+                              }}
+                            />
+                          </>
+                        )}
+                      </Box>
+
+                      {/* Información del testimonio */}
+                      <Box sx={{ p: 2 }}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="subtitle1" fontWeight="700" sx={{ mb: 0.5, fontSize: "0.9rem" }}>
+                              {testimonial.name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.75rem" }}>
+                              {testimonial.role}
+                            </Typography>
+                          </Box>
+                          <Chip
+                            label="VIDEO"
+                            size="small"
+                            sx={{
+                              bgcolor: "#346bf1",
+                              color: "white",
+                              fontWeight: "600",
+                              fontSize: "0.65rem",
+                              height: "22px"
+                            }}
+                          />
+                        </Box>
+                        
+                        {/* Rating */}
+                        <Box sx={{ display: "flex", alignItems: "center", mt: 1.5 }}>
+                          <Box sx={{ display: "flex", gap: 0.3 }}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Box
+                                key={star}
+                                sx={{
+                                  width: 12,
+                                  height: 12,
+                                  borderRadius: "50%",
+                                  bgcolor: "#346bf1",
+                                }}
+                              />
+                            ))}
+                          </Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ ml: 1, fontSize: "0.7rem" }}>
+                            5.0 • Experiencia verificada
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Paper>
+                  ))}
+                </Box>
+              </Box>
+
+              {/* Botones ajustados al mismo tamaño */}
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                <Button 
+                  variant="outlined" 
+                  fullWidth 
+                  sx={{ 
+                    borderRadius: 3, 
+                    py: 1.1,
+                    fontSize: "0.875rem",
+                    minHeight: "44px"
+                  }} 
+                  onClick={prev}
+                >
+                  Atrás
+                </Button>
+                <Button 
+                  variant="contained" 
+                  fullWidth 
+                  sx={{ 
+                    borderRadius: 3, 
+                    py: 1.1,
+                    fontSize: "0.875rem",
+                    minHeight: "44px"
+                  }}
+                  onClick={next}
+                >
+                  Finalizar
+                </Button>
+              </Box>
+            </Box>
           </motion.div>
         )}
 
