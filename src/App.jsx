@@ -63,7 +63,7 @@ export default function ClinicOnboardingMobile() {
     { 
       name: "Galerías", 
       map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
-      image: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=400"
+      image: "../src/assets/img/foto-galerias.jpg"
     },
     { 
       name: "Centro", 
@@ -105,27 +105,27 @@ export default function ClinicOnboardingMobile() {
 
   const carouselRef = useRef(null);
 
-// Función para manejar el scroll
-const handleScroll = () => {
-  if (carouselRef.current) {
-    const scrollLeft = carouselRef.current.scrollLeft;
-    const slideWidth = carouselRef.current.offsetWidth;
-    const newSlide = Math.round(scrollLeft / slideWidth);
-    setCurrentSlide(newSlide);
-  }
-};
+  // Función para manejar el scroll
+  const handleScroll = () => {
+    if (carouselRef.current) {
+      const scrollLeft = carouselRef.current.scrollLeft;
+      const slideWidth = carouselRef.current.offsetWidth;
+      const newSlide = Math.round(scrollLeft / slideWidth);
+      setCurrentSlide(newSlide);
+    }
+  };
 
-// Función para desplazarse a un slide específico
-const scrollToSlide = (slideIndex) => {
-  if (carouselRef.current) {
-    const slideWidth = carouselRef.current.offsetWidth;
-    carouselRef.current.scrollTo({
-      left: slideWidth * slideIndex,
-      behavior: 'smooth'
-    });
-    setCurrentSlide(slideIndex);
-  }
-};
+  // Función para desplazarse a un slide específico
+  const scrollToSlide = (slideIndex) => {
+    if (carouselRef.current) {
+      const slideWidth = carouselRef.current.offsetWidth;
+      carouselRef.current.scrollTo({
+        left: slideWidth * slideIndex,
+        behavior: 'smooth'
+      });
+      setCurrentSlide(slideIndex);
+    }
+  };
 
   function next() {
     setStep((s) => Math.min(s + 1, 4));
@@ -187,166 +187,6 @@ const scrollToSlide = (slideIndex) => {
     </Box>
   );
 
-  // Slides para el carrusel del step 1
-  const slides = [
-    {
-      type: "map",
-      content: (
-        <Paper
-          sx={{
-            height: "220px",
-            borderRadius: 0,
-            overflow: "hidden",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            border: "2px solid #e0e0e0",
-            flexShrink: 0,
-          }}
-        >
-          <iframe
-            title={selectedBranch}
-            src={branches.find((b) => b.name === selectedBranch)?.map}
-            width="100%"
-            height="100%"
-            style={{ border: "none" }}
-            allowFullScreen={false}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </Paper>
-      )
-    },
-    {
-      type: "image",
-      content: (
-        <Paper
-          sx={{
-            height: "220px",
-            borderRadius: 2,
-            overflow: "hidden",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            flexShrink: 0,
-          }}
-        >
-          <Box
-            component="img"
-            src={branches.find((b) => b.name === selectedBranch)?.image}
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-            alt={`Imagen de ${selectedBranch}`}
-          />
-        </Paper>
-      )
-    },
-    {
-      type: "video",
-      content: (
-        branchVideos[selectedBranch]?.map((video, index) => (
-          <Paper
-            key={index}
-            sx={{
-              width: "100%",
-              height: "220px",
-              borderRadius: 2,
-              overflow: "hidden",
-              position: "relative",
-              cursor: "pointer",
-              bgcolor: "#000",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-              flexShrink: 0,
-            }}
-            onClick={() => handleBranchVideoPlay(selectedBranch, index)}
-          >
-            {playingBranchVideo === `${selectedBranch}-${index}` ? (
-              <video
-                controls
-                autoPlay
-                playsInline
-                webkit-playsinline="true"
-                disablePictureInPicture
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  backgroundColor: "#000",
-                }}
-                onContextMenu={preventDefault}
-                onEnded={() => setPlayingBranchVideo(null)}
-              >
-                <source src={video} type="video/mp4" />
-              </video>
-            ) : (
-              <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-                <video
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    opacity: 0.7,
-                    filter: "brightness(0.6)",
-                  }}
-                  muted
-                  playsInline
-                  webkit-playsinline="true"
-                >
-                  <source src={video} type="video/mp4" />
-                </video>
-                
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "rgba(0,0,0,0.3)",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: "50%",
-                      bgcolor: "rgba(255,255,255,0.9)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-                    }}
-                  >
-                    <PlayArrow sx={{ color: "#346bf1", fontSize: 28 }} />
-                  </Box>
-                </Box>
-                
-                <Typography sx={{ 
-                  position: "absolute", 
-                  bottom: 12, 
-                  left: 12, 
-                  color: "white", 
-                  fontWeight: "700",
-                  background: "rgba(0,0,0,0.7)",
-                  padding: "6px 12px",
-                  borderRadius: 2,
-                  fontSize: "0.9rem"
-                }}>
-                  Video {index + 1}
-                </Typography>
-              </Box>
-            )}
-          </Paper>
-        ))
-      )
-    }
-  ];
-
   return (
     <Box
       sx={{
@@ -362,6 +202,19 @@ const scrollToSlide = (slideIndex) => {
         touchAction: "manipulation",
         WebkitUserSelect: "none",
         WebkitTouchCallout: "none",
+        // Prevenir zoom en iOS
+        fontSize: "16px", // Tamaño mínimo para prevenir zoom automático
+      }}
+      // Prevenir zoom con gestos
+      onTouchStart={(e) => {
+        if (e.touches.length > 1) {
+          e.preventDefault();
+        }
+      }}
+      onTouchMove={(e) => {
+        if (e.touches.length > 1) {
+          e.preventDefault();
+        }
       }}
     >
       <AnimatePresence mode="wait">
@@ -379,7 +232,8 @@ const scrollToSlide = (slideIndex) => {
               p: mobileSizes.padding, 
               display: "flex", 
               flexDirection: "column",
-              minHeight: "740px"
+              minHeight: "740px",
+              overflow: "hidden", // Prevenir scroll innecesario
             }}>
               {/* Video Player */}
               <Paper
@@ -657,337 +511,302 @@ const scrollToSlide = (slideIndex) => {
 
         {/* STEP 1 - Info de sucursal CON CARRUSEL HORIZONTAL */}
         {step === 1 && (
-  <motion.div
-    key={step}
-    initial={{ opacity: 0, y: 40 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -40 }}
-    transition={{ duration: 0.5 }}
-  >
-    <Box sx={{ 
-      height: "100dvh", 
-      p: mobileSizes.padding, 
-      display: "flex", 
-      flexDirection: "column",
-      minHeight: "740px"
-    }}>
-      <Typography variant="h5" fontWeight="700" sx={{ mb: 2, fontSize: mobileSizes.titleFontSize, textAlign: "center" }}>
-        {selectedBranch}
-      </Typography>
-
-      {/* Carrusel Mejorado */}
-      <Box sx={{ 
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        mb: 2,
-        overflow: "hidden"
-      }}>
-        {/* Contenedor del carrusel */}
-        <Box 
-          ref={carouselRef}
-          sx={{ 
-            display: "flex",
-            overflowX: "auto",
-            gap: 2,
-            scrollSnapType: "x mandatory",
-            scrollbarWidth: "none",
-            "&::-webkit-scrollbar": { display: "none" },
-            flex: 1,
-            borderRadius: 2,
-          }}
-          onScroll={handleScroll}
-        >
-          {/* Slide 1: Mapa y Fotografía */}
-          <Box
-            sx={{
-              minWidth: "100%",
-              scrollSnapAlign: "start",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              justifyContent: "center"
-            }}
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -40 }}
+            transition={{ duration: 0.5 }}
           >
-            {/* Mapa INTERACTIVO - SOLUCIÓN CORREGIDA */}
-            <Paper
-  sx={{
-    height: "200px",
-    borderRadius: 2,
-    overflow: "hidden",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    border: "2px solid #e0e0e0",
-    flexShrink: 0,
-    position: "relative",
-  }}
->
-  <iframe
-    title={`Mapa de ${selectedBranch}`}
-    src={branches.find((b) => b.name === selectedBranch)?.map}
-    width="100%"
-    height="100%"
-    style={{ 
-      border: "none",
-      pointerEvents: "auto"
-    }}
-    allowFullScreen={false}
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-  />
-  
-  {/* Overlay que intercepta solo los clics de enlaces */}
-  <Box
-    sx={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 2,
-      pointerEvents: "none",
-    }}
-    onClick={(e) => {
-      // Si el clic fue en un área que probablemente sea un enlace, lo prevenimos
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickY = e.clientY - rect.top;
-      const clickX = e.clientX - rect.left;
-      
-      // Las áreas de controles del mapa suelen estar en los bordes
-      const isControlArea = 
-        clickY < 50 || // Parte superior (controles de zoom)
-        clickY > rect.height - 50 || // Parte inferior
-        clickX < 50 || // Lado izquierdo
-        clickX > rect.width - 50; // Lado derecho
-        
-      if (!isControlArea) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }}
-    onContextMenu={(e) => e.preventDefault()}
-  />
-</Paper>
-
-            {/* Fotografía */}
-            <Paper
-              sx={{
-                height: "180px",
-                borderRadius: 2,
-                overflow: "hidden",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                flexShrink: 0,
-              }}
-            >
-              <Box
-                component="img"
-                src={branches.find((b) => b.name === selectedBranch)?.image}
-                sx={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
-                alt={`Imagen de ${selectedBranch}`}
-              />
-            </Paper>
-          </Box>
-
-          {/* Slide 2: Video */}
-          <Box
-            sx={{
-              minWidth: "100%",
-              scrollSnapAlign: "start",
-              display: "flex",
+            <Box sx={{ 
+              height: "100dvh", 
+              p: mobileSizes.padding, 
+              display: "flex", 
               flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            {branchVideos[selectedBranch]?.map((video, index) => (
-              <Paper
-                key={index}
-                sx={{
-                  width: "100%",
-                  maxWidth: "280px",
-                  height: "420px",
-                  borderRadius: 2,
-                  overflow: "hidden",
-                  position: "relative",
-                  cursor: "pointer",
-                  bgcolor: "#000",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  flexShrink: 0,
-                  margin: "0 auto"
-                }}
-                onClick={() => handleBranchVideoPlay(selectedBranch, index)}
-              >
-                {playingBranchVideo === `${selectedBranch}-${index}` ? (
-                  <video
-                    controls
-                    autoPlay
-                    playsInline
-                    webkit-playsinline="true"
-                    disablePictureInPicture
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      backgroundColor: "#000",
+              minHeight: "740px",
+              overflow: "hidden",
+            }}>
+              <Typography variant="h5" fontWeight="700" sx={{ mb: 2, fontSize: mobileSizes.titleFontSize, textAlign: "center" }}>
+                {selectedBranch}
+              </Typography>
+
+              {/* Carrusel Mejorado */}
+              <Box sx={{ 
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                mb: 2,
+                overflow: "hidden"
+              }}>
+                {/* Contenedor del carrusel */}
+                <Box 
+                  ref={carouselRef}
+                  sx={{ 
+                    display: "flex",
+                    overflowX: "auto",
+                    gap: 2,
+                    scrollSnapType: "x mandatory",
+                    scrollbarWidth: "none",
+                    "&::-webkit-scrollbar": { display: "none" },
+                    flex: 1,
+                    borderRadius: 2,
+                  }}
+                  onScroll={handleScroll}
+                >
+                  {/* Slide 1: Mapa y Fotografía */}
+                  <Box
+                    sx={{
+                      minWidth: "100%",
+                      scrollSnapAlign: "start",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      justifyContent: "center"
                     }}
-                    onContextMenu={preventDefault}
-                    onEnded={() => setPlayingBranchVideo(null)}
                   >
-                    <source src={video} type="video/mp4" />
-                  </video>
-                ) : (
-                  <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
-                    <video
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        opacity: 0.7,
-                        filter: "brightness(0.6)",
-                      }}
-                      muted
-                      playsInline
-                      webkit-playsinline="true"
-                    >
-                      <source src={video} type="video/mp4" />
-                    </video>
-                    
-                    <Box
+                    {/* Mapa COMPLETAMENTE CUADRADO E INTERACTIVO */}
+              <Paper
+                sx={{
+                  height: "250px",
+                  borderRadius: 0,
+                  overflow: "hidden",
+                  mb: 3,
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                  border: "2px solid #e0e0e0",
+                }}
+              >
+                <iframe
+                  title={selectedBranch}
+                  src={branches.find((b) => b.name === selectedBranch)?.map}
+                  width="100%"
+                  height="100%"
+                  style={{ border: "none" }}
+                  allowFullScreen={false}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </Paper>
+
+                    {/* Fotografía */}
+                    <Paper
                       sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(0,0,0,0.3)",
+                        height: "180px",
+                        borderRadius: 2,
+                        overflow: "hidden",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        flexShrink: 0,
                       }}
                     >
                       <Box
+                        component="img"
+                        src={branches.find((b) => b.name === selectedBranch)?.image}
                         sx={{
-                          width: 60,
-                          height: 60,
-                          borderRadius: "50%",
-                          bgcolor: "rgba(255,255,255,0.9)",
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        alt={`Imagen de ${selectedBranch}`}
+                      />
+                    </Paper>
+                  </Box>
+
+                  {/* Slide 2: Video */}
+                  <Box
+                    sx={{
+                      minWidth: "100%",
+                      scrollSnapAlign: "start",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }}
+                  >
+                    {branchVideos[selectedBranch]?.map((video, index) => (
+                      <Paper
+                        key={index}
+                        sx={{
+                          width: "100%",
+                          maxWidth: "280px",
+                          height: "420px",
+                          borderRadius: 2,
+                          overflow: "hidden",
+                          position: "relative",
+                          cursor: "pointer",
+                          bgcolor: "#000",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                          flexShrink: 0,
+                          margin: "0 auto"
                         }}
+                        onClick={() => handleBranchVideoPlay(selectedBranch, index)}
                       >
-                        <PlayArrow sx={{ color: "#346bf1", fontSize: 28 }} />
-                      </Box>
-                    </Box>
-                    
-                    <Typography sx={{ 
-                      position: "absolute", 
-                      bottom: 12, 
-                      left: 12, 
-                      color: "white", 
-                      fontWeight: "700",
-                      background: "rgba(0,0,0,0.7)",
-                      padding: "6px 12px",
-                      borderRadius: 2,
-                      fontSize: "0.9rem"
-                    }}>
-                      Video {index + 1}
-                    </Typography>
+                        {playingBranchVideo === `${selectedBranch}-${index}` ? (
+                          <video
+                            controls
+                            autoPlay
+                            playsInline
+                            webkit-playsinline="true"
+                            disablePictureInPicture
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              backgroundColor: "#000",
+                            }}
+                            onContextMenu={preventDefault}
+                            onEnded={() => setPlayingBranchVideo(null)}
+                          >
+                            <source src={video} type="video/mp4" />
+                          </video>
+                        ) : (
+                          <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+                            <video
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                                opacity: 0.7,
+                                filter: "brightness(0.6)",
+                              }}
+                              muted
+                              playsInline
+                              webkit-playsinline="true"
+                            >
+                              <source src={video} type="video/mp4" />
+                            </video>
+                            
+                            <Box
+                              sx={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "rgba(0,0,0,0.3)",
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  width: 60,
+                                  height: 60,
+                                  borderRadius: "50%",
+                                  bgcolor: "rgba(255,255,255,0.9)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                                }}
+                              >
+                                <PlayArrow sx={{ color: "#346bf1", fontSize: 28 }} />
+                              </Box>
+                            </Box>
+                            
+                            <Typography sx={{ 
+                              position: "absolute", 
+                              bottom: 12, 
+                              left: 12, 
+                              color: "white", 
+                              fontWeight: "700",
+                              background: "rgba(0,0,0,0.7)",
+                              padding: "6px 12px",
+                              borderRadius: 2,
+                              fontSize: "0.9rem"
+                            }}>
+                              Video {index + 1}
+                            </Typography>
+                          </Box>
+                        )}
+                      </Paper>
+                    ))}
                   </Box>
-                )}
-              </Paper>
-            ))}
-          </Box>
-        </Box>
+                </Box>
 
-        {/* Indicador de slide - Puntos con efecto */}
-        <Box sx={{ 
-          display: "flex", 
-          justifyContent: "center", 
-          alignItems: "center",
-          py: 1,
-          gap: 1
-        }}>
-          {/* Punto 1 */}
-          <Box 
-            sx={{ 
-              display: "flex", 
-              alignItems: "center",
-              cursor: "pointer"
-            }}
-            onClick={() => scrollToSlide(0)}
-          >
-            <Box
-              sx={{
-                width: currentSlide === 0 ? 12 : 8,
-                height: currentSlide === 0 ? 12 : 8,
-                borderRadius: "50%",
-                bgcolor: currentSlide === 0 ? "#346bf1" : "#ccc",
-                transition: "all 0.3s ease",
-                boxShadow: currentSlide === 0 ? "0 0 0 3px rgba(52, 107, 241, 0.2)" : "none",
-              }}
-            />
-          </Box>
-          
-          {/* Línea conectora */}
-          <Box 
-            sx={{ 
-              width: 30, 
-              height: 2, 
-              bgcolor: currentSlide === 0 ? "#346bf1" : "#e0e0e0",
-              borderRadius: 1,
-              transition: "all 0.3s ease",
-            }} 
-          />
-          
-          {/* Punto 2 */}
-          <Box 
-            sx={{ 
-              display: "flex", 
-              alignItems: "center",
-              cursor: "pointer"
-            }}
-            onClick={() => scrollToSlide(1)}
-          >
-            <Box
-              sx={{
-                width: currentSlide === 1 ? 12 : 8,
-                height: currentSlide === 1 ? 12 : 8,
-                borderRadius: "50%",
-                bgcolor: currentSlide === 1 ? "#346bf1" : "#ccc",
-                transition: "all 0.3s ease",
-                boxShadow: currentSlide === 1 ? "0 0 0 3px rgba(52, 107, 241, 0.2)" : "none",
-              }}
-            />
-          </Box>
-        </Box>
+                {/* Indicador de slide - Puntos con efecto */}
+                <Box sx={{ 
+                  display: "flex", 
+                  justifyContent: "center", 
+                  alignItems: "center",
+                  py: 1,
+                  gap: 1
+                }}>
+                  {/* Punto 1 */}
+                  <Box 
+                    sx={{ 
+                      display: "flex", 
+                      alignItems: "center",
+                      cursor: "pointer"
+                    }}
+                    onClick={() => scrollToSlide(0)}
+                  >
+                    <Box
+                      sx={{
+                        width: currentSlide === 0 ? 12 : 8,
+                        height: currentSlide === 0 ? 12 : 8,
+                        borderRadius: "50%",
+                        bgcolor: currentSlide === 0 ? "#346bf1" : "#ccc",
+                        transition: "all 0.3s ease",
+                        boxShadow: currentSlide === 0 ? "0 0 0 3px rgba(52, 107, 241, 0.2)" : "none",
+                      }}
+                    />
+                  </Box>
+                  
+                  {/* Línea conectora */}
+                  <Box 
+                    sx={{ 
+                      width: 30, 
+                      height: 2, 
+                      bgcolor: currentSlide === 0 ? "#346bf1" : "#e0e0e0",
+                      borderRadius: 1,
+                      transition: "all 0.3s ease",
+                    }} 
+                  />
+                  
+                  {/* Punto 2 */}
+                  <Box 
+                    sx={{ 
+                      display: "flex", 
+                      alignItems: "center",
+                      cursor: "pointer"
+                    }}
+                    onClick={() => scrollToSlide(1)}
+                  >
+                    <Box
+                      sx={{
+                        width: currentSlide === 1 ? 12 : 8,
+                        height: currentSlide === 1 ? 12 : 8,
+                        borderRadius: "50%",
+                        bgcolor: currentSlide === 1 ? "#346bf1" : "#ccc",
+                        transition: "all 0.3s ease",
+                        boxShadow: currentSlide === 1 ? "0 0 0 3px rgba(52, 107, 241, 0.2)" : "none",
+                      }}
+                    />
+                  </Box>
+                </Box>
 
-        {/* Texto indicador */}
-        <Typography 
-          variant="body2" 
-          sx={{ 
-            color: "#666", 
-            fontWeight: "600",
-            textAlign: "center",
-            fontSize: "0.8rem"
-          }}
-        >
-          {currentSlide === 0 ? "📍 Mapa y Fotografía" : "🎥 Video de la sucursal"}
-        </Typography>
-      </Box>
+                {/* Texto indicador */}
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: "#666", 
+                    fontWeight: "600",
+                    textAlign: "center",
+                    fontSize: "0.8rem"
+                  }}
+                >
+                  {currentSlide === 0 ? "📍 Mapa y Fotografía" : "🎥 Video de la sucursal"}
+                </Typography>
+              </Box>
 
-      <NavigationButtons onPrev={prev} onNext={next} />
-    </Box>
-  </motion.div>
-)}
+              <NavigationButtons onPrev={prev} onNext={next} />
+            </Box>
+          </motion.div>
+        )}
 
         {/* STEP 2 - WhatsApp */}
         {step === 2 && (
@@ -1132,7 +951,7 @@ const scrollToSlide = (slideIndex) => {
           </motion.div>
         )}
 
-        {/* STEP 3 - FAQ + Testimonios (SIN BLOQUEO DE REPRODUCCIÓN) */}
+        {/* STEP 3 - FAQ + Testimonios CORREGIDO */}
         {step === 3 && (
           <motion.div
             key={step}
