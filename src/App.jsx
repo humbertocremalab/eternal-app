@@ -1371,7 +1371,7 @@ export default function ClinicOnboardingMobile() {
   }}
   onClick={() => {
     // Obtenemos el enlace según la sucursal seleccionada
-    const clinicUrl = clinicLinks[selectedBranch] || "https://eternal.com";
+    const clinicUrl = clinicLinks[selectedBranch] || "https://sucursales.eternal.mx/galerias";
 
     // Mensaje personalizado
     const message = `¡Hola! Acabo de recibir un regalo de $200 para mi consulta médica en la clínica ${selectedBranch}. 
