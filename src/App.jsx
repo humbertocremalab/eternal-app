@@ -429,8 +429,8 @@ export default function ClinicOnboardingMobile() {
                       sx={{
                         p: 2,
                         borderRadius: 2,
-                        bgcolor: selectedBranch?.name === s.name ? "#e3f2fd" : "white",
-                        border: selectedBranch?.name === s.name ? "2px solid #346bf1" : "1px solid #e0e0e0",
+                        bgcolor: selectedBranch === s.name ? "#e3f2fd" : "white",
+                        border: selectedBranch === s.name ? "2px solid #346bf1" : "1px solid #e0e0e0",
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
@@ -438,7 +438,7 @@ export default function ClinicOnboardingMobile() {
                         transition: "all 0.2s ease",
                         minHeight: "60px"
                       }}
-                      onClick={() => setSelectedBranch(s)}
+                      onClick={() => setSelectedBranch(s.name)}
                     >
                       <Place sx={{ color: "#346bf1", fontSize: mobileSizes.iconSize }} />
                       <Typography variant="body1" fontWeight="600" sx={{ fontSize: mobileSizes.bodyFontSize }}>
@@ -479,7 +479,7 @@ export default function ClinicOnboardingMobile() {
                       onClick={next}
                       disabled={!selectedBranch}
                     >
-                      Continuar a {selectedBranch?.name || "Sucursal"}
+                      Continuar a {selectedBranch || "Sucursal"}
                     </Button>
                   </motion.div>
                 )}
