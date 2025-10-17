@@ -425,12 +425,12 @@ export default function ClinicOnboardingMobile() {
                     transition={{ delay: videoEnded ? 0.1 * i : 0 }}
                   >
                     <Paper
-                      elevation={selectedBranch === s.name ? 4 : 2}
+                      elevation={selectedBranch?.name === s.name ? 4 : 2}
                       sx={{
                         p: 2,
                         borderRadius: 2,
-                        bgcolor: selectedBranch === s.name ? "#e3f2fd" : "white",
-                        border: selectedBranch === s.name ? "2px solid #346bf1" : "1px solid #e0e0e0",
+                        bgcolor: selectedBranch?.name === s.name ? "#e3f2fd" : "white",
+                        border: selectedBranch?.name === s.name ? "2px solid #346bf1" : "1px solid #e0e0e0",
                         cursor: "pointer",
                         display: "flex",
                         alignItems: "center",
@@ -438,7 +438,7 @@ export default function ClinicOnboardingMobile() {
                         transition: "all 0.2s ease",
                         minHeight: "60px"
                       }}
-                      onClick={() => setSelectedBranch(s.name)}
+                      onClick={() => setSelectedBranch(s)}
                     >
                       <Place sx={{ color: "#346bf1", fontSize: mobileSizes.iconSize }} />
                       <Typography variant="body1" fontWeight="600" sx={{ fontSize: mobileSizes.bodyFontSize }}>
@@ -479,7 +479,7 @@ export default function ClinicOnboardingMobile() {
                       onClick={next}
                       disabled={!selectedBranch}
                     >
-                      Continuar a {selectedBranch || "Sucursal"}
+                      Continuar a {selectedBranch?.name || "Sucursal"}
                     </Button>
                   </motion.div>
                 )}
@@ -537,7 +537,7 @@ export default function ClinicOnboardingMobile() {
           letterSpacing: "0.5px",
         }}
       >
-        {selectedBranch}
+        {selectedBranch?.name}
       </Typography>
 
       {/* Carrusel */}
@@ -582,8 +582,8 @@ export default function ClinicOnboardingMobile() {
             {/* Imagen superior */}
             <Box
               component="img"
-              src={branches.find((b) => b.name === selectedBranch)?.image}
-              alt={`Imagen de ${selectedBranch}`}
+              src={selectedBranch?.image}
+              alt={`Imagen de ${selectedBranch?.name}`}
               sx={{
                 width: "100%",
                 height: "180px",
@@ -615,8 +615,8 @@ export default function ClinicOnboardingMobile() {
                 }}
               >
                 <iframe
-                  title={selectedBranch}
-                  src={branches.find((b) => b.name === selectedBranch)?.map}
+                  title={selectedBranch?.name}
+                  src={selectedBranch?.map}
                   width="100%"
                   height="100%"
                   style={{ border: "none" }}
@@ -639,7 +639,7 @@ export default function ClinicOnboardingMobile() {
               gap: 2,
             }}
           >
-            {branchVideos[selectedBranch]?.map((video, index) => (
+            {branchVideos[selectedBranch?.name]?.map((video, index) => (
               <Paper
                 key={index}
                 sx={{
@@ -652,9 +652,9 @@ export default function ClinicOnboardingMobile() {
                   bgcolor: "#000",
                   boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
                 }}
-                onClick={() => handleBranchVideoPlay(selectedBranch, index)}
+                onClick={() => handleBranchVideoPlay(selectedBranch?.name, index)}
               >
-                {playingBranchVideo === `${selectedBranch}-${index}` ? (
+                {playingBranchVideo === `${selectedBranch?.name}-${index}` ? (
                   <video
                     controls
                     autoPlay
@@ -1153,7 +1153,6 @@ export default function ClinicOnboardingMobile() {
           </motion.div>
         )}
 
-        {/* STEP 4 - Cupón de Regalo OPTIMIZADO para 360x740 */}
         {/* STEP 4 - Cupón de Regalo con código compartido */}
 {step === 4 && (
   <motion.div
