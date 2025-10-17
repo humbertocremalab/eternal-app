@@ -1370,11 +1370,17 @@ export default function ClinicOnboardingMobile() {
     mb: 1.5,
   }}
   onClick={() => {
-    const message = "¡Hola! Acabo de recibir un regalo de $200 para mi consulta médica. Te comparto esta increíble oferta por si la necesitas: [Enlace de la clínica]";
+    // Obtenemos el enlace según la sucursal seleccionada
+    const clinicUrl = clinicLinks[selectedBranch] || "https://eternal.com";
+
+    // Mensaje personalizado
+    const message = `¡Hola! Acabo de recibir un regalo de $200 para mi consulta médica en la clínica ${selectedBranch}. 
+Quiero asistir a consulta: ${clinicUrl}`;
+
     window.open(`https://wa.me/528180744482?text=${encodeURIComponent(message)}`, "_blank");
   }}
 >
-  Canjear Codigo
+  Canjear Código
 </Button>
                     </motion.div>
 
