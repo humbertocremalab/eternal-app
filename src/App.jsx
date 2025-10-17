@@ -30,7 +30,6 @@ import {
 } from "@mui/icons-material";
 import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/700.css";
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // Importar videos locales
 import videoIntro from '../src/assets/videos/Eternalvsl1.mp4';
