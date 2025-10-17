@@ -63,7 +63,7 @@ export default function ClinicOnboardingMobile() {
     { 
       name: "Galerías", 
       map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
-      image: "../src/assets/img/foto-galerias.jpg"
+      image: "./src/assets/img/foto-galerias.jpg"
     },
     { 
       name: "Terranova", 
