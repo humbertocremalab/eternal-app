@@ -1154,290 +1154,217 @@ export default function ClinicOnboardingMobile() {
         )}
 
         {/* STEP 4 - Cupón de Regalo OPTIMIZADO para 360x740 */}
-        {step === 4 && (
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.6, type: "spring" }}
-          >
-            <Box
+        {/* STEP 4 - Cupón de Regalo con código compartido */}
+{step === 4 && (
+  <motion.div
+    key={step}
+    initial={{ opacity: 0, scale: 0.8 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.8 }}
+    transition={{ duration: 0.6, type: "spring" }}
+  >
+    {(() => {
+      // ✅ Generamos el código solo una vez
+      const codigoCupon = Math.random().toString(36).substr(2, 8).toUpperCase();
+      const sucursal = selectedBranch?.name || "Sucursal no especificada";
+      const phone = "528180744482";
+
+      return (
+        <Box
+          sx={{
+            minHeight: "740px",
+            height: "100dvh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            p: isSmallMobile ? 1.5 : 2,
+            bgcolor: "#f8f9fa",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Efecto confeti */}
+          <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ y: -30, x: Math.random() * 100 - 50, opacity: 0 }}
+                animate={{
+                  y: "100vh",
+                  x: Math.random() * 100 - 50,
+                  opacity: [0, 1, 1, 0],
+                  rotate: 360,
+                }}
+                transition={{
+                  duration: 1.2 + Math.random() * 1.2,
+                  delay: Math.random() * 0.2,
+                }}
+                style={{
+                  position: "absolute",
+                  left: `${Math.random() * 100}%`,
+                  width: 6,
+                  height: 6,
+                  background: ["#346bf1", "#1E88E5", "#2730b0"][Math.floor(Math.random() * 3)],
+                  borderRadius: "50%",
+                }}
+              />
+            ))}
+          </Box>
+
+          {/* Tarjeta del cupón */}
+          <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}>
+            <Paper
+              elevation={6}
               sx={{
-                minHeight: "740px",
-                height: "100dvh",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                p: isSmallMobile ? 1.5 : 2,
-                bgcolor: "#f8f9fa",
-                position: "relative",
+                width: "100%",
+                maxWidth: "320px",
+                borderRadius: 2,
                 overflow: "hidden",
+                background: "white",
+                border: "2px solid #e0e0e0",
+                position: "relative",
+                boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+                margin: "0 auto",
               }}
             >
-              {/* Efecto de Confeti más compacto */}
-              <Box sx={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, pointerEvents: "none" }}>
-                {[...Array(12)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ 
-                      y: -30, 
-                      x: Math.random() * 100 - 50,
-                      opacity: 0,
-                      rotate: 0
-                    }}
-                    animate={{ 
-                      y: "100vh", 
-                      x: Math.random() * 100 - 50,
-                      opacity: [0, 1, 1, 0],
-                      rotate: 360
-                    }}
-                    transition={{
-                      duration: 1.2 + Math.random() * 1.2,
-                      delay: Math.random() * 0.2,
-                      repeat: 0
-                    }}
-                    style={{
-                      position: "absolute",
-                      left: `${Math.random() * 100}%`,
-                      width: 6,
-                      height: 6,
-                      background: ["#346bf1", "#346bf1", "#1E88E5", "#346bf1", "#2730b0"][Math.floor(Math.random() * 5)],
+              <Box sx={{ p: isSmallMobile ? 2 : 2.5, textAlign: "center" }}>
+                {/* Icono de regalo */}
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.4 }}>
+                  <Box
+                    sx={{
+                      width: 55,
+                      height: 55,
                       borderRadius: "50%",
+                      background: "linear-gradient(135deg, #346bf1 0%, #1ea0f7 100%)",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: "0 auto 15px",
+                      boxShadow: "0 3px 8px rgba(52, 107, 241, 0.3)",
                     }}
-                  />
-                ))}
-              </Box>
-
-              {/* Cupón OPTIMIZADO para 360px */}
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                style={{ width: "100%" }}
-              >
-                <Paper
-                  elevation={6}
-                  sx={{
-                    width: "100%",
-                    maxWidth: "320px",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    background: "white",
-                    border: "2px solid #e0e0e0",
-                    position: "relative",
-                    boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-                    margin: "0 auto",
-                  }}
-                >
-                  <Box sx={{ p: isSmallMobile ? 2 : 2.5, textAlign: "center" }}>
-                    {/* Icono de regalo más compacto */}
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 0.5, type: "spring" }}
-                    >
-                      <Box
-                        sx={{
-                          width: 55,
-                          height: 55,
-                          borderRadius: "50%",
-                          background: "linear-gradient(135deg, #346bf1 0%, #1ea0f7 100%)",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          margin: "0 auto 15px",
-                          boxShadow: "0 3px 8px rgba(52, 107, 241, 0.3)",
-                        }}
-                      >
-                        <Typography variant="h5" fontWeight="800" sx={{ color: "white" }}>
-                          🎁
-                        </Typography>
-                      </Box>
-                    </motion.div>
-
-                    {/* Texto principal compacto */}
-                    <Typography variant="h6" fontWeight="700" sx={{ mb: 0.5, color: "#1a1a1a", fontSize: "1.2rem" }}>
-                      ¡Felicidades!
+                  >
+                    <Typography variant="h5" fontWeight="800" sx={{ color: "white" }}>
+                      🎁
                     </Typography>
-                    <Typography variant="body1" fontWeight="600" sx={{ mb: 2, color: "#666", fontSize: "0.9rem" }}>
-                      Tienes un regalo especial
-                    </Typography>
-
-                    {/* Monto del regalo compacto */}
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.7, type: "spring" }}
-                    >
-                      <Box
-                        sx={{
-                          background: "linear-gradient(135deg, #2c4db9 0%, #2e647d 100%)",
-                          color: "white",
-                          padding: "15px",
-                          borderRadius: 2,
-                          marginBottom: 2,
-                          boxShadow: "0 3px 8px rgba(44, 77, 185, 0.3)",
-                        }}
-                      >
-                        <Typography variant="h4" fontWeight="800" sx={{ mb: 0.5, fontSize: "1.8rem" }}>
-                          $200
-                        </Typography>
-                        <Typography variant="body1" fontWeight="600" sx={{ fontSize: "0.85rem" }}>
-                          EN TU CONSULTA
-                        </Typography>
-                      </Box>
-                    </motion.div>
-
-                    {/* Información importante compacta */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }}
-                    >
-                      <Typography 
-                        variant="body2" 
-                        sx={{ 
-                          color: "#666", 
-                          lineHeight: 1.5,
-                          mb: 2,
-                          textAlign: "center",
-                          fontSize: "0.8rem"
-                        }}
-                      >
-                        Espera nuestra llamada en las próximas horas hábiles desde un número local.
-                      </Typography>
-                    </motion.div>
-
-                    {/* Código de cupón compacto */}
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1.0 }}
-                    >
-                      <Paper
-                        elevation={1}
-                        sx={{
-                          p: 1.5,
-                          borderRadius: 2,
-                          bgcolor: "#FFF3E0",
-                          border: "2px dashed #346bf1",
-                          mb: 2,
-                          textAlign: "center",
-                        }}
-                      >
-                        <Typography variant="body2" sx={{ color: "#346bf1", fontWeight: "600", mb: 1, fontSize: "0.75rem" }}>
-                          Muestra este código en tu consulta:
-                        </Typography>
-                        <Typography 
-                          variant="h6" 
-                          fontWeight="800" 
-                          sx={{ 
-                            color: "#346bf1",
-                            fontFamily: "'Courier New', monospace",
-                            letterSpacing: 1,
-                            background: "rgba(255,255,255,0.7)",
-                            padding: "6px 10px",
-                            borderRadius: 1,
-                            border: "1px solid #346bf1",
-                            fontSize: "1rem"
-                          }}
-                        >
-                          {Math.random().toString(36).substr(2, 8).toUpperCase()}
-                        </Typography>
-                      </Paper>
-                    </motion.div>
-
-                    {/* Botón de WhatsApp compacto */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.1 }}
-                    >
-                     <Button
-  variant="contained"
-  fullWidth
-  startIcon={<Chat sx={{ fontSize: "20px" }} />}
-  sx={{
-    borderRadius: 2,
-    py: 1.2,
-    fontWeight: "700",
-    fontSize: "0.9rem",
-    background: "linear-gradient(135deg, #346bf1 0%, #124b8c 100%)",
-    boxShadow: "0 3px 10px rgba(52, 107, 241, 0.4)",
-    minHeight: "44px",
-    mb: 1.5,
-  }}
-  onClick={() => {
-    // Obtenemos el enlace según la sucursal seleccionada
-    const clinicUrl = clinicLinks[selectedBranch] || "https://sucursales.eternal.mx/galerias";
-
-    // Mensaje personalizado
-    const message = `¡Hola! Acabo de recibir un regalo de $200 para mi consulta médica en la clínica ${selectedBranch}. 
-Quiero asistir a consulta: ${clinicUrl}`;
-
-    window.open(`https://wa.me/528180744482?text=${encodeURIComponent(message)}`, "_blank");
-  }}
->
-  Canjear Código
-</Button>
-                    </motion.div>
-
-                    {/* Botón secundario compacto */}
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.3 }}
-                    >
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        sx={{
-                          borderRadius: 2,
-                          py: 1.2,
-                          fontWeight: "600",
-                          fontSize: "0.9rem",
-                          borderColor: "#ccc",
-                          color: "#666",
-                          minHeight: "44px",
-                          "&:hover": {
-                            borderColor: "#999",
-                            bgcolor: "rgba(0,0,0,0.02)",
-                          },
-                        }}
-                        onClick={() => setStep(0)}
-                      >
-                        Volver al Inicio
-                      </Button>
-                    </motion.div>
                   </Box>
-                </Paper>
-              </motion.div>
+                </motion.div>
 
-              {/* Mensaje adicional compacto */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-              >
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    mt: 2, 
-                    color: "#666", 
-                    textAlign: "center",
-                    maxWidth: "280px",
-                    lineHeight: 1.4,
-                    fontSize: "0.8rem"
+                {/* Texto principal */}
+                <Typography variant="h6" fontWeight="700" sx={{ mb: 0.5, color: "#1a1a1a" }}>
+                  ¡Felicidades!
+                </Typography>
+                <Typography variant="body1" fontWeight="600" sx={{ mb: 2, color: "#666" }}>
+                  Tienes un regalo especial
+                </Typography>
+
+                {/* Monto del regalo */}
+                <Box
+                  sx={{
+                    background: "linear-gradient(135deg, #2c4db9 0%, #2e647d 100%)",
+                    color: "white",
+                    p: 2,
+                    borderRadius: 2,
+                    mb: 2,
+                    boxShadow: "0 3px 8px rgba(44, 77, 185, 0.3)",
                   }}
                 >
-                  Comparte esta oferta con alguien que pueda necesitarla
-                </Typography>
-              </motion.div>
-            </Box>
+                  <Typography variant="h4" fontWeight="800">
+                    $200
+                  </Typography>
+                  <Typography variant="body1" fontWeight="600" sx={{ fontSize: "0.85rem" }}>
+                    EN TU CONSULTA
+                  </Typography>
+                </Box>
+
+                {/* Código compartido */}
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    bgcolor: "#FFF3E0",
+                    border: "2px dashed #346bf1",
+                    mb: 2,
+                    textAlign: "center",
+                  }}
+                >
+                  <Typography variant="body2" sx={{ color: "#346bf1", fontWeight: "600", mb: 1 }}>
+                    Muestra este código en tu consulta:
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    fontWeight="800"
+                    sx={{
+                      color: "#346bf1",
+                      fontFamily: "'Courier New', monospace",
+                      letterSpacing: 1,
+                      background: "rgba(255,255,255,0.7)",
+                      padding: "6px 10px",
+                      borderRadius: 1,
+                      border: "1px solid #346bf1",
+                    }}
+                  >
+                    {codigoCupon}
+                  </Typography>
+                </Paper>
+
+                {/* Botón de WhatsApp */}
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<Chat sx={{ fontSize: "20px" }} />}
+                  sx={{
+                    borderRadius: 2,
+                    py: 1.2,
+                    fontWeight: "700",
+                    fontSize: "0.9rem",
+                    background: "linear-gradient(135deg, #346bf1 0%, #124b8c 100%)",
+                    boxShadow: "0 3px 10px rgba(52, 107, 241, 0.4)",
+                    minHeight: "44px",
+                    mb: 1.5,
+                  }}
+                  onClick={() => {
+                    const message = `¡Hola! Acabo de recibir un regalo de $200 para mi consulta médica en la sucursal ${sucursal}. Mi código es: ${codigoCupon}`;
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+                  }}
+                >
+                  Mandar mensaje para canjear código
+                </Button>
+
+                {/* Botón secundario */}
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  sx={{
+                    borderRadius: 2,
+                    py: 1.2,
+                    fontWeight: "600",
+                    fontSize: "0.9rem",
+                    borderColor: "#ccc",
+                    color: "#666",
+                    minHeight: "44px",
+                  }}
+                  onClick={() => setStep(0)}
+                >
+                  Volver al Inicio
+                </Button>
+              </Box>
+            </Paper>
           </motion.div>
-        )}
+
+          <Typography
+            variant="body2"
+            sx={{ mt: 2, color: "#666", textAlign: "center", maxWidth: "280px", lineHeight: 1.4, fontSize: "0.8rem" }}
+          >
+            Comparte esta oferta con alguien que pueda necesitarla
+          </Typography>
+        </Box>
+      );
+    })()}
+  </motion.div>
+)}
+
       </AnimatePresence>
     </Box>
   );
