@@ -66,22 +66,17 @@ export default function ClinicOnboardingMobile() {
       image: "../src/assets/img/foto-galerias.jpg"
     },
     { 
-      name: "Centro", 
+      name: "Terranova", 
       map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
       image: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=400"
     },
     { 
-      name: "Monterrey Norte", 
+      name: "Saltillo", 
       map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
       image: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=400"
     },
     { 
-      name: "San Pedro", 
-      map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
-      image: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=400"
-    },
-    { 
-      name: "Cumbres", 
+      name: "Cdmx", 
       map: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.6173644001456!2d-100.35766342379881!3d25.683975877400812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x866297cef094fea9%3A0xeaea01d6dd72287!2sEternal%20Centro%20Medico%20Galer%C3%ADas!5e0!3m2!1ses-419!2smx!4v1760511783100!5m2!1ses-419!2smx",
       image: "https://images.unsplash.com/photo-1551966775-a4ddc8df052b?w=400"
     },
@@ -89,10 +84,9 @@ export default function ClinicOnboardingMobile() {
 
   const branchVideos = {
     "Galerías": [galeriasVideo1],
-    "Centro": [galeriasVideo1],
-    "Monterrey Norte": [galeriasVideo1],
-    "San Pedro": [galeriasVideo1],
-    "Cumbres": [galeriasVideo1],
+    "Terranova": [galeriasVideo1],
+    "Saltillo": [galeriasVideo1],
+    "Cdmx": [galeriasVideo1],
   };
 
   const faqs = [
@@ -1146,7 +1140,7 @@ export default function ClinicOnboardingMobile() {
                     Mariana López
                   </Typography>
                   <Typography variant="body1" color="text.secondary" sx={{ mb: 2, fontSize: "0.9rem" }}>
-                    Paciente de Ortodoncia - Tratamiento completado
+                    Paciente con Artritis - Tratamiento completado
                   </Typography>
                   
                   {/* Rating */}
